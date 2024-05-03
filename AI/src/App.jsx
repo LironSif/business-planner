@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import './App.css';
 import ChatBox from './components/ChatBox';
 import InputPrompt from './components/InputPrompt';
-import DownloadLink from './components/DownloadLink';
 
 function App() {
     const [chatHistory, setChatHistory] = useState([]);
@@ -11,12 +10,17 @@ function App() {
 
     const handleUserMessage = (message, isUser = true) => {
         setChatHistory(prevHistory => [...prevHistory, { user: isUser, message }]);
-        if (isUser) setAiTyping(true);
+        setAiTyping(true);  // Simulate AI processing time
+        // This setTimeout is assumed necessary for some other part of your logic, such as simulating network delay
+        setTimeout(() => {
+            setAiTyping(false);
+            // The AI response is now handled directly within the response from your backend/API
+            // handleAIResponse("How can I help you further?");  // Remove or comment out this line
+        }, 1000);
     };
 
     const handleAIResponse = (response) => {
         setChatHistory(prevHistory => [...prevHistory, { user: false, message: response }]);
-        setAiTyping(false);
     };
 
     return (
@@ -25,9 +29,8 @@ function App() {
                 <h1>The COMPANY LTD</h1>
                 <h3>Ai Business Planner</h3>
             </header>
-            <InputPrompt onSendMessage={handleUserMessage} onReceiveAIResponse={handleAIResponse} />
             <ChatBox messages={chatHistory} aiTyping={aiTyping} />
-            {/* Add DownloadLink component if needed */}
+            <InputPrompt onSendMessage={handleUserMessage} onReceiveAIResponse={handleAIResponse} />
         </div>
     );
 }

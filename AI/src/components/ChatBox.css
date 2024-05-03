@@ -11,8 +11,21 @@
   padding: 1rem;
 }
 
+.message user {
+margin: 10px;
+}
+
+.user-name{
+  display: flex;
+margin-bottom: 20px;
+font-size: bold;}
+.ai-name{
+  display: flex;
+margin-bottom: 20px;
+font-size: bold;}
+
 .message {
-  margin: 1rem 0;
+  margin: 1rem 0.5rem;
   padding: 1rem;
   border-radius: var(--border-radius);
   background-color: var(--ai-message-color);

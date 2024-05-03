@@ -1,23 +1,26 @@
-// InputPrompt.jsx
 import React, { useState } from 'react';
 import axios from 'axios';
 import './InputPrompt.css';
-import { serverApiUrl } from '../urls/urls.js'
-
+import { serverApiUrl } from '../urls/urls.js';
 
 const InputPrompt = ({ onSendMessage, onReceiveAIResponse }) => {
     const [message, setMessage] = useState('');
+    const [waitingForUserInput, setWaitingForUserInput] = useState(true); // Assume always waiting unless told otherwise
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!message.trim()) return;  // Prevent sending empty messages
-        onSendMessage(message); // Send user's message to the chat history
+        onSendMessage(message);
         try {
             const response = await axios.post(`${serverApiUrl}api/generate-business-plan`, { description: message });
-            onReceiveAIResponse(response.data.message); // Pass AI response to the parent component
+            onReceiveAIResponse(response.data.message);
+            // Only update 'waitingForUserInput' if the response explicitly requires changing it
+            if (response.data.waitForUserInput !== undefined) {
+                setWaitingForUserInput(response.data.waitForUserInput);
+            }
         } catch (error) {
             console.error('Error fetching AI response:', error);
-            // Handle error if needed
+            setWaitingForUserInput(true); // Keep input available on error
         }
         setMessage(''); // Clear the message input field
     };
