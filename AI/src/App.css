@@ -1,0 +1,44 @@
+/* Global styles with CSS Variables */
+:root {
+  --primary-color: #333;
+  --secondary-color: #555;
+  --background-color: #f8f8f8;
+  --user-message-color: #dff9fb;
+  --ai-message-color: #e6e6e6;
+  --text-color: #333;
+  --link-color: #fff;
+  --border-radius: 10px;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+.App {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+h1, h3 {
+  margin: 0.5rem 0;
+}
+
+h1 {
+  font-size: 2.5rem;
+  color: var(--primary-color);
+}
+
+h3 {
+  font-size: 1.8rem;
+  color: var(--secondary-color);
+}
