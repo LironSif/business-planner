@@ -1,27 +1,44 @@
-import express from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv'; // Import dotenv for environment variables
-import businessPlanRoutes from './routes/businessPlanRoutes.js';
-import logger from './logger.js';
-
-const app = express(); // Instantiate the express app first
-
-// Use the cors middleware with default options (allow all origins)
-app.use(cors());
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import businessPlanRoutes from "./routes/businessPlanRoutes.js";
+import bodyParser from "body-parser";
 
 dotenv.config();
-app.use(express.json()); // Body parsing middleware
 
-// Routes
-app.use('/api', businessPlanRoutes);
+const app = express();
+const PORT = process.env.SERVER_PORT || 5000;
+const BASE_SERVER_URL = process.env.BASE_SERVER_URL;
+const CLIENT_PORT = process.env.CLIENT_PORT;
+const DEPLOY_CLIENT = process.env.DEPLOY_CLIENT;
 
-// Error handling middleware
+const allowedOrigins = [
+  "http://localhost:5173",
+  `${BASE_SERVER_URL}:${CLIENT_PORT}`,
+  `${DEPLOY_CLIENT}`, // Fixed the typo here
+];
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
+app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use("/api", businessPlanRoutes);
+
 app.use((err, req, res, next) => {
-    logger.error(err.stack);
-    res.status(500).json({ message: 'Internal server error' });
+  res.status(500).json({ message: "Internal server error" });
 });
 
-const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    logger.info(`Server running on http://localhost:${PORT}`);
+  console.log(`Server is listening on PORT: ${PORT}`);
 });
